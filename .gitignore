@@ -1,0 +1,4 @@
+bench/out/
+*.dwarf
+/lib/
+/bin/

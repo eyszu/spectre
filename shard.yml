@@ -1,0 +1,7 @@
+name: spectre
+version: 0.1.0
+description: An ExpressJS-style web microframework for Crystal
+authors:
+  - eyszu
+crystal: ">= 1.10.0"
+license: MIT
