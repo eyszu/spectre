@@ -1,6 +1,6 @@
 # Spectre
 
-An ExpressJS-style web microframework for Crystal. Routes, middleware, route params,
+An extremely fast, Express.js-style web microframework for Crystal. Routes, middleware, route params,
 typed JSON bodies, groups, static files, and `(req, res)` handlers, on top of
 Crystal's own `HTTP::Server`.
 
@@ -24,7 +24,12 @@ Add to `shard.yml`:
 ```yaml
 dependencies:
   spectre:
-    path: ../spectre   # or your git URL
+    github: eyszu/spectre
+```
+install via shards:
+
+```bash
+shards install
 ```
 
 Requires Crystal 1.10 or newer (developed on 1.11.2). No other dependencies.
@@ -229,7 +234,7 @@ Run the specs with `crystal spec`.
   built with `-Dpreview_mt` and `CRYSTAL_WORKERS=2` and served a 5 second load with no errors, but multi-core
   throughput was not benchmarked. Your own shared state is yours to guard.
 
-## Benchmark
+## Benchmark: vs Go
 
 `bench/run.sh` builds a Spectre server and an equivalent Go `net/http` server (Go 1.22 `ServeMux`
 patterns, `encoding/json`), pins each server to one CPU and `wrk` to another, and measures three routes.
@@ -249,6 +254,9 @@ with `wrk` on the same machine. Numbers move 10 to 20% between runs, which is wh
 Multi-core scaling, TLS, keep-alive churn, large bodies and real handlers that hit a database were not
 measured. In real applications the database and your own code usually matter far more than the framework.
 Run `bench/run.sh` on your own hardware before drawing conclusions. It needs `wrk`, `taskset` and Go.
+
+## Benchmark: vs Grip Etc.
+- [benchmark](https://github.com/eyszu/crystal-web-framework-benchmark)
 
 ## Differences from Express
 
@@ -271,5 +279,9 @@ examples/app.cr           typed JSON, auth, groups, static files
 spec/                     crystal spec
 bench/                    Spectre vs Go net/http
 ```
+## Real-world App example
+- [radiance](https://github.com/eyszu/radiance)
+
+---
 
 MIT licensed.
