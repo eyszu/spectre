@@ -280,7 +280,9 @@ spec/                     crystal spec
 bench/                    Spectre vs Go net/http
 ```
 ## Real-world App example
-- [radiance](https://github.com/eyszu/radiance)
+- [Radiance](https://github.com/eyszu/radiance)
+- [Omu](https://github.com/eyszu/Omu)
+
 
 ---
 
