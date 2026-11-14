@@ -1,4 +1,4 @@
-<img width="1254" height="1254" alt="Speeding Lavender Ghost" src="https://github.com/user-attachments/assets/2b3c04bb-968b-478b-a48b-fb1038804fb3" />
+<img width="192" height="192" alt="Speeding Lavender Ghost" src="https://github.com/user-attachments/assets/2b3c04bb-968b-478b-a48b-fb1038804fb3" />
 # Spectre
 
 An extremely fast, Express.js-style web microframework for Crystal. Routes, middleware, route params,
