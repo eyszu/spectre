@@ -20,6 +20,13 @@ private def build_app
   app.post("/typed") { |req, res| u = req.json(SpecUser); res.status(201).json({hi: u.name, age: u.age}) }
   app.post("/untyped") { |req, res| res.send req.json["a"].as_i.to_s }
   app.post("/form") { |req, res| res.send req.form["x"] }
+  app.post("/upload") do |req, res|
+    names = [] of String
+    HTTP::FormData.parse(req.raw) do |part|
+      names << "#{part.name}:#{part.filename}:#{part.body.gets_to_end}"
+    end
+    res.status(201).json(names)
+  end
   app.get("/halt") { |req, res| Spectre.halt(418, "teapot") }
   app.get("/boom") { |req, res| raise "kaboom" }
   app.get("/int/:n") { |req, res| res.send (req.params.int("n") + 1).to_s }
@@ -30,6 +37,18 @@ end
 
 describe Spectre do
   app = build_app
+
+  it "reads multipart uploads through req.raw and HTTP::FormData" do
+    io = IO::Memory.new
+    builder = HTTP::FormData::Builder.new(io, "BOUNDARY")
+    builder.field("note", "hi")
+    builder.file("file", IO::Memory.new("file body"), HTTP::FormData::FileMetadata.new(filename: "a.txt"))
+    builder.finish
+    headers = HTTP::Headers{"Content-Type" => builder.content_type}
+    r = app.request("POST", "/upload", io.to_s, headers)
+    r.status_code.should eq 201
+    JSON.parse(r.body).as_a.map(&.as_s).should eq ["note::hi", "file:a.txt:file body"]
+  end
 
   it "matches static routes" do
     r = app.request("GET", "/")

@@ -17,6 +17,13 @@ struct User
   end
 end
 
+# File uploads. Spectre has no multipart helper, so this uses Crystal's
+# HTTP::FormData on `req.raw`. Parse before touching req.body/json/form,
+# which would consume the stream.
+UPLOAD_DIR = ENV.fetch("UPLOAD_DIR", File.join(Dir.tempdir, "spectre-uploads"))
+MAX_UPLOAD = 5_i64 * 1024 * 1024
+Dir.mkdir_p(UPLOAD_DIR)
+
 USERS = {} of Int64 => User
 NEXT_ID = Atomic(Int64).new(1_i64)
 
@@ -31,6 +38,60 @@ end
 app.get "/hello/:name" do |req, res|
   greeting = req.query["greeting"]? || "Hello"
   res.json({message: "#{greeting}, #{req.params["name"]}!"})
+end
+
+app.get "/upload" do |req, res|
+  res.html <<-HTML
+    <h1>Upload a file</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" required>
+      <input type="text" name="note" placeholder="note (optional)">
+      <button>Upload</button>
+    </form>
+    HTML
+end
+
+app.post "/upload" do |req, res|
+  content_type = req.header("Content-Type") || ""
+  Spectre.halt(415, "Expected multipart/form-data") unless content_type.starts_with?("multipart/form-data")
+
+  saved = [] of NamedTuple(name: String, size: Int64)
+  note = nil
+
+  HTTP::FormData.parse(req.raw) do |part|
+    case part.name
+    when "note"
+      note = part.body.gets_to_end
+    when "file"
+      # Drop any client-supplied path, then prefix a random id so names never collide.
+      original = File.basename((part.filename || "").gsub('\\', '/'))
+      next if original.empty?
+      stored = "#{Random::Secure.hex(4)}-#{original.gsub(/[^\w.\-]/, "_")}"
+      path = File.join(UPLOAD_DIR, stored)
+      size = 0_i64
+      File.open(path, "w") do |f|
+        # Read one byte past the limit so oversize uploads are detected without buffering them.
+        size = IO.copy(IO::Sized.new(part.body, MAX_UPLOAD + 1), f)
+      end
+      if size > MAX_UPLOAD
+        File.delete(path)
+        Spectre.halt(413, "File exceeds #{MAX_UPLOAD} bytes")
+      end
+      saved << {name: stored, size: size}
+    end
+  end
+
+  Spectre.halt(400, "No file field named 'file'") if saved.empty?
+  res.status(201).json({files: saved, note: note})
+end
+
+app.get "/uploads/:name" do |req, res|
+  name = req.params["name"]
+  path = File.join(UPLOAD_DIR, File.basename(name))
+  Spectre.halt(404, "Not found") unless File.file?(path)
+  File.open(path) do |file|
+    res.send_io(file, file.size, MIME.from_filename?(path) || "application/octet-stream")
+  end
 end
 
 auth = Spectre.layer do |req, res, nxt|
