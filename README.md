@@ -258,7 +258,8 @@ measured. In real applications the database and your own code usually matter far
 Run `bench/run.sh` on your own hardware before drawing conclusions. It needs `wrk`, `taskset` and Go.
 
 ## Benchmark: vs Grip Etc.
-- [benchmark](https://github.com/eyszu/crystal-web-framework-benchmark)
+- [benchmark1](https://github.com/eyszu/crystal-web-framework-benchmark)
+- [benchmark2](https://github.com/eyszu/crystal-web-framework-benchmark-2)
 
 ## Differences from Express
 
