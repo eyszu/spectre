@@ -1,4 +1,4 @@
-<img width="192" height="192" alt="Purple Shadow Spirit" src="https://github.com/user-attachments/assets/7310c357-edce-4a26-b08e-bd38f2c14833" />
+<img width="300" height="300" alt="Purple Shadow Spirit" src="https://github.com/user-attachments/assets/7310c357-edce-4a26-b08e-bd38f2c14833" />
 
 # Spectre
 
@@ -285,6 +285,7 @@ bench/                    Spectre vs Go net/http
 ## Real-world App example
 - [Radiance](https://github.com/eyszu/radiance)
 - [Omu](https://github.com/eyszu/Omu)
+- [Shonin](https://github.com/eyszu/shonin)
 
 
 ---
