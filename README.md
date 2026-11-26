@@ -1,4 +1,4 @@
-<img width="500" height="500" alt="Chibi Spectral Wraith in Purple Shadow" src="https://github.com/user-attachments/assets/661a764c-ef50-49eb-aad7-60d1290046d3" />
+<img width="400" height="400" alt="Chibi Spectral Wraith in Purple Shadow" src="https://github.com/user-attachments/assets/661a764c-ef50-49eb-aad7-60d1290046d3" />
 
 # Spectre
 
