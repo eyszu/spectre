@@ -47,6 +47,7 @@ Requires Crystal 1.10 or newer (developed on 1.11.2). No other dependencies.
 - [Radiance](https://github.com/eyszu/radiance)
 - [Omu](https://github.com/eyszu/Omu)
 - [Shonin](https://github.com/eyszu/shonin)
+- [POSSO-Starter](https://github.com/eyszu/posso-starter)
 
 
 ---
